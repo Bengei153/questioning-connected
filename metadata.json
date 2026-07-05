@@ -1,0 +1,6 @@
+{
+  "name": "Questioning",
+  "description": "A modern, production-quality multi-tenant quiz platform featuring AI-powered question generation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
