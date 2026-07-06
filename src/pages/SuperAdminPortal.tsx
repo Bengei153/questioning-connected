@@ -259,6 +259,13 @@ export default function SuperAdminPortal({ currentTab }: SuperAdminPortalProps) 
   );
   const filteredQs = questions.filter(q => q.text.toLowerCase().includes(qSearch.toLowerCase()));
 
+  // Real counts, derived from data we're already fetching correctly -
+// stats.orgCount/adminCount/studentCount/systemActivity24h/clusterHealth
+// never existed on the real backend response.
+const orgCount = orgs.length;
+const adminCount = allUsers.filter(u => u.role === "OrgAdmin").length;
+const studentCount = allUsers.filter(u => u.role === "Student").length;
+
   // Skeleton loaders helper
   if (loading && !stats) {
     return (
@@ -302,103 +309,104 @@ export default function SuperAdminPortal({ currentTab }: SuperAdminPortalProps) 
       </div>
 
       {/* VIEW: DASHBOARD */}
-      {currentTab === "dashboard" && stats && (
-        <div className="space-y-8 animate-fade-in">
-          {/* KPI Panels Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div className="glass-card rounded-2xl p-6 border border-white/5 shadow-xl relative overflow-hidden">
-              <Building2 className="w-8 h-8 text-indigo-400 absolute right-6 top-6 opacity-20" />
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Active Tenants</p>
-              <h3 className="font-display text-4xl font-bold text-white mt-2 tracking-tight">{stats.orgCount}</h3>
-              <p className="text-xs text-[#4cd7f6] mt-2 font-medium">Organizations Active</p>
-            </div>
+        {currentTab === "dashboard" && stats && (
+          <div className="space-y-8 animate-fade-in">
+            {/* KPI Panels Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              <div className="glass-card rounded-2xl p-6 border border-white/5 shadow-xl relative overflow-hidden">
+                <Building2 className="w-8 h-8 text-indigo-400 absolute right-6 top-6 opacity-20" />
+                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Active Tenants</p>
+                <h3 className="font-display text-4xl font-bold text-white mt-2 tracking-tight">{orgCount}</h3>
+                <p className="text-xs text-[#4cd7f6] mt-2 font-medium">Organizations Active</p>
+              </div>
 
-            <div className="glass-card rounded-2xl p-6 border border-white/5 shadow-xl relative overflow-hidden">
-              <Users className="w-8 h-8 text-cyan-400 absolute right-6 top-6 opacity-20" />
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Active Admins</p>
-              <h3 className="font-display text-4xl font-bold text-white mt-2 tracking-tight">{stats.adminCount}</h3>
-              <p className="text-xs text-indigo-300 mt-2 font-medium">Tenant Managers</p>
-            </div>
+              <div className="glass-card rounded-2xl p-6 border border-white/5 shadow-xl relative overflow-hidden">
+                <Users className="w-8 h-8 text-cyan-400 absolute right-6 top-6 opacity-20" />
+                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Active Admins</p>
+                <h3 className="font-display text-4xl font-bold text-white mt-2 tracking-tight">{adminCount}</h3>
+                <p className="text-xs text-indigo-300 mt-2 font-medium">Tenant Managers</p>
+              </div>
 
-            <div className="glass-card rounded-2xl p-6 border border-white/5 shadow-xl relative overflow-hidden">
-              <Users className="w-8 h-8 text-indigo-400 absolute right-6 top-6 opacity-20" />
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Enrolled</p>
-              <h3 className="font-display text-4xl font-bold text-white mt-2 tracking-tight">{stats.studentCount}</h3>
-              <p className="text-xs text-[#d0bcff] mt-2 font-medium">Active Students</p>
-            </div>
+              <div className="glass-card rounded-2xl p-6 border border-white/5 shadow-xl relative overflow-hidden">
+                <Users className="w-8 h-8 text-indigo-400 absolute right-6 top-6 opacity-20" />
+                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Enrolled</p>
+                <h3 className="font-display text-4xl font-bold text-white mt-2 tracking-tight">{studentCount}</h3>
+                <p className="text-xs text-[#d0bcff] mt-2 font-medium">Active Students</p>
+              </div>
 
-            <div className="glass-card rounded-2xl p-6 border border-white/5 shadow-xl relative overflow-hidden">
-              <Activity className="w-8 h-8 text-rose-400 absolute right-6 top-6 opacity-20" />
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Cluster Ingress</p>
-              <h3 className="font-display text-4xl font-bold text-white mt-2 tracking-tight">{stats.systemActivity24h}</h3>
-              <p className="text-xs text-rose-400 mt-2 font-medium">Daily API Requests</p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* System logs */}
-            <div className="lg:col-span-2 glass-card rounded-3xl p-6 border border-white/10 shadow-2xl space-y-4">
-              <h3 className="font-display font-bold text-lg text-white flex items-center gap-2">
-                <Activity className="w-5 h-5 text-indigo-400" />
-                <span>System Ingress Log (Latest Alerts)</span>
-              </h3>
-              <div className="space-y-3 max-h-[350px] overflow-y-auto pr-1">
-                {logs.map(log => (
-                  <div key={log.id} className="p-3.5 rounded-xl bg-white/5 border border-white/5 text-xs flex items-start gap-3">
-                    <span className={`px-2.5 py-1 rounded font-bold uppercase shrink-0 font-mono text-[9px] ${
-                      log.severity === "warning" ? "bg-amber-500/10 text-amber-400 border border-amber-500/20" :
-                      log.severity === "error" ? "bg-rose-500/10 text-rose-400 border border-rose-500/20" :
-                      "bg-indigo-500/10 text-indigo-300 border border-indigo-500/20"
-                    }`}>
-                      {log.severity}
-                    </span>
-                    <div className="flex-1">
-                      <p className="text-slate-200 leading-relaxed font-sans">{log.message}</p>
-                      <p className="text-slate-500 font-mono text-[10px] mt-1">{log.timestamp}</p>
-                    </div>
-                  </div>
-                ))}
+              <div className="glass-card rounded-2xl p-6 border border-white/5 shadow-xl relative overflow-hidden">
+                <Database className="w-8 h-8 text-rose-400 absolute right-6 top-6 opacity-20" />
+                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Question Bank</p>
+                <h3 className="font-display text-4xl font-bold text-white mt-2 tracking-tight">{stats.totalQuestions}</h3>
+                <p className="text-xs text-rose-400 mt-2 font-medium">{stats.totalQuestionGroups} Question Groups</p>
               </div>
             </div>
 
-            {/* Performance status card */}
-            <div className="glass-card rounded-3xl p-6 border border-white/10 shadow-2xl flex flex-col justify-between">
-              <div>
-                <h3 className="font-display font-bold text-lg text-white mb-4 flex items-center gap-2">
-                  <Settings2 className="w-5 h-5 text-[#4cd7f6]" />
-                  <span>Platform Orchestration</span>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* System logs */}
+              <div className="lg:col-span-2 glass-card rounded-3xl p-6 border border-white/10 shadow-2xl space-y-4">
+                <h3 className="font-display font-bold text-lg text-white flex items-center gap-2">
+                  <Activity className="w-5 h-5 text-indigo-400" />
+                  <span>System Ingress Log (Latest Alerts)</span>
                 </h3>
-                <div className="space-y-4">
-                  <div>
-                    <div className="flex justify-between text-xs text-slate-300 mb-1.5 font-mono">
-                      <span>Node Uptime</span>
-                      <span className="text-emerald-400">{stats.clusterHealth.primaryUptime}</span>
+                <div className="space-y-3 max-h-[350px] overflow-y-auto pr-1">
+                  {logs.length === 0 && (
+                    <p className="text-xs text-slate-500 text-center py-8">
+                      No activity recorded yet — GET /api/admin/activity currently returns an empty list on the backend regardless of what's actually happened.
+                    </p>
+                  )}
+                  {logs.map(log => (
+                    <div key={log.id} className="p-3.5 rounded-xl bg-white/5 border border-white/5 text-xs flex items-start gap-3">
+                      <span className={`px-2.5 py-1 rounded font-bold uppercase shrink-0 font-mono text-[9px] ${
+                        log.severity === "warning" ? "bg-amber-500/10 text-amber-400 border border-amber-500/20" :
+                        log.severity === "error" ? "bg-rose-500/10 text-rose-400 border border-rose-500/20" :
+                        "bg-indigo-500/10 text-indigo-300 border border-indigo-500/20"
+                      }`}>
+                        {log.severity}
+                      </span>
+                      <div className="flex-1">
+                        <p className="text-slate-200 leading-relaxed font-sans">{log.message}</p>
+                        <p className="text-slate-500 font-mono text-[10px] mt-1">{log.timestamp}</p>
+                      </div>
                     </div>
-                    <div className="w-full bg-slate-900 h-2 rounded-full overflow-hidden">
-                      <div className="bg-emerald-500 h-full rounded-full" style={{ width: "99.9%" }} />
-                    </div>
-                  </div>
-                  <div>
-                    <div className="flex justify-between text-xs text-slate-300 mb-1.5 font-mono">
-                      <span>Database Load</span>
-                      <span className="text-indigo-400">{stats.clusterHealth.secondaryLoad}</span>
-                    </div>
-                    <div className="w-full bg-slate-900 h-2 rounded-full overflow-hidden">
-                      <div className="bg-indigo-500 h-full rounded-full" style={{ width: "42%" }} />
-                    </div>
-                  </div>
+                  ))}
                 </div>
               </div>
-              <div className="mt-8 p-4 bg-[#c3c0ff]/5 border border-[#c3c0ff]/10 rounded-2xl flex items-start gap-3">
-                <CheckCircle className="w-5 h-5 text-[#c3c0ff] shrink-0 mt-0.5" />
-                <p className="text-xs text-slate-300 leading-relaxed">
-                  All microservices are communicating accurately. Dual independent API base URLs are synchronized with matching JWT validations.
-                </p>
+
+              {/* Quick actions card - replaces the fabricated "Platform Orchestration" cluster panel */}
+              <div className="glass-card rounded-3xl p-6 border border-white/10 shadow-2xl flex flex-col justify-between">
+                <div>
+                  <h3 className="font-display font-bold text-lg text-white mb-4 flex items-center gap-2">
+                    <Settings2 className="w-5 h-5 text-[#4cd7f6]" />
+                    <span>Quick Actions</span>
+                  </h3>
+                  <div className="space-y-3">
+                    <button
+                      onClick={() => setShowOrgModal(true)}
+                      className="w-full flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 text-slate-200 font-medium py-2.5 px-4 rounded-xl text-sm transition-colors"
+                    >
+                      <Plus className="w-4 h-4" />
+                      Create Organization
+                    </button>
+                    <button
+                      onClick={() => setShowAdminModal(true)}
+                      className="w-full flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 text-slate-200 font-medium py-2.5 px-4 rounded-xl text-sm transition-colors"
+                    >
+                      <UserPlus className="w-4 h-4" />
+                      Register Org Admin
+                    </button>
+                  </div>
+                </div>
+                <div className="mt-8 p-4 bg-[#c3c0ff]/5 border border-[#c3c0ff]/10 rounded-2xl flex items-start gap-3">
+                  <CheckCircle className="w-5 h-5 text-[#c3c0ff] shrink-0 mt-0.5" />
+                  <p className="text-xs text-slate-300 leading-relaxed">
+                    Connected to LoginSystem and the Quiz API.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
       {/* VIEW: ORGANIZATIONS */}
       {currentTab === "organizations" && (
