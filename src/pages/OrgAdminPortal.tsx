@@ -22,6 +22,7 @@ import {
 import { useUI } from "../components/UIUtilities";
 import { apiFetch } from "../lib/authStore";
 import { QuestionGroup, Folder, Question, Option, UserProfile } from "../types";
+import { extractErrorMessage } from "../lib/apiError";
 
 interface OrgAdminPortalProps {
   currentTab: string;
@@ -189,8 +190,8 @@ export default function OrgAdminPortal({
         setStudentPass("");
         fetchData();
       } else {
-        const data = await res.json();
-        toast(data.message || "Failed to register student", "error");
+        const errorMessage = await extractErrorMessage(res, "Failed to register student");
+        toast(errorMessage, "error");
       }
     } catch {
       toast("Error connecting to user manager", "error");
@@ -228,6 +229,9 @@ export default function OrgAdminPortal({
           const res = await apiFetch(`/api/users/${student.id}/reset-password`, { method: "POST" });
           if (res.ok) {
             toast("Reset code triggered.");
+          } else {
+            const errorMessage = await extractErrorMessage(res, "Error sending reset");
+            toast(errorMessage, "error");
           }
         } catch {
           toast("Error sending reset", "error");

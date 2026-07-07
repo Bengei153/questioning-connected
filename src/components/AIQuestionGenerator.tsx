@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { apiFetch } from "../lib/authStore";
 import { useUI } from "./UIUtilities";
 import { QuestionGroup, Folder } from "../types";
+import { extractErrorMessage } from "../lib/apiError";
 
 interface AIQuestionGeneratorProps {
   isOpen: boolean;
@@ -78,7 +79,8 @@ export default function AIQuestionGenerator({
           createdCount: 0,
           errors: [data.message || "An error occurred during AI processing."]
         });
-        toast(data.message || "AI extraction failed.", "error");
+        const errorMessage = await extractErrorMessage(res, "AI extraction failed.");
+        toast(errorMessage, "error");
       }
     } catch (err: any) {
       setImportResult({

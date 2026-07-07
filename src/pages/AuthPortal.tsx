@@ -3,6 +3,7 @@ import { BrainCircuit, Eye, EyeOff, Lock, User, Mail, ShieldAlert, Sparkles, Ale
 import { useAuthStore } from "../lib/authStore";
 import { buildUrl } from "../lib/apiConfig";
 import { useUI } from "../components/UIUtilities";
+import { getErrorMessage } from "../lib/apiError";
 
 interface AuthPortalProps {
   onOpenSettings?: () => void;
