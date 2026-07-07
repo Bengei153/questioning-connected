@@ -99,25 +99,35 @@ export default function OrgAdminPortal({
   }, [lastImportTime]);
 
   const fetchData = async () => {
-    setLoading(true);
-    try {
-      const [statsRes, usersRes, groupsRes] = await Promise.all([
-        apiFetch("/api/org/stats"),
-        apiFetch("/api/users"),
-        apiFetch("/api/questiongroup")
-      ]);
+  setLoading(true);
+  try {
+    const [usersRes, groupsRes] = await Promise.all([
+      apiFetch("/api/users"),
+      apiFetch("/api/questiongroup")
+    ]);
 
-      if (statsRes.ok) setStats(await statsRes.json());
-      if (usersRes.ok) {
-        const list: UserProfile[] = await usersRes.json();
-        setStudents(list.filter(u => u.role === "Student"));
-      }
-      if (groupsRes.ok) setGroups(await groupsRes.json());
-    } catch {
-      toast("Error downloading tenant context", "error");
-    } finally {
-      setLoading(false);
+    let studentList: UserProfile[] = [];
+    if (usersRes.ok) {
+      studentList = (await usersRes.json()).filter((u: UserProfile) => u.role === "Student");
+      setStudents(studentList);
     }
+
+    let groupList: QuestionGroup[] = [];
+    if (groupsRes.ok) {
+      groupList = await groupsRes.json();
+      setGroups(groupList);
+    }
+
+    // Real counts derived from the two calls above - /api/org/stats never existed.
+    setStats({
+      studentCount: studentList.length,
+      groupCount: groupList.length
+    });
+  } catch {
+    toast("Error downloading tenant context", "error");
+  } finally {
+    setLoading(false);
+  }
   };
 
   const fetchFolders = async (groupId: string) => {
