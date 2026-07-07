@@ -539,10 +539,10 @@ export default function OrgAdminPortal({
         <div className="space-y-8 animate-fade-in">
           <div>
             <h2 className="font-display font-black text-3xl text-white">Dashboard Overview</h2>
-            <p className="text-slate-400 text-sm mt-1">Real-time telemetry and student cohorts scoped to your organization.</p>
+            <p className="text-slate-400 text-sm mt-1">Students and question groups scoped to your organization.</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="glass-card rounded-2xl p-6 border border-white/5 relative overflow-hidden">
               <Users className="w-8 h-8 text-indigo-400 absolute right-6 top-6 opacity-20" />
               <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Scoped Students</p>
@@ -556,34 +556,20 @@ export default function OrgAdminPortal({
               <h3 className="font-display text-4xl font-bold text-white mt-2">{stats.groupCount}</h3>
               <p className="text-xs text-[#4cd7f6] mt-2">Topic banks recorded</p>
             </div>
-
-            <div className="glass-card rounded-2xl p-6 border border-white/5 relative overflow-hidden animate-pulse">
-              <ClipboardList className="w-8 h-8 text-[#d0bcff] absolute right-6 top-6 opacity-20" />
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Live Quiz Attempts</p>
-              <h3 className="font-display text-4xl font-bold text-[#d0bcff] mt-2">{stats.activeQuizzes}</h3>
-              <p className="text-xs text-slate-400 mt-2">Ongoing assessments logging</p>
-            </div>
           </div>
 
-          {/* Activity Logs & Manual Tool */}
+          {/* Quick Actions & Manual Tool - replaces the fabricated "Live Quiz Attempts" card
+              and the fabricated Recent Activities feed (stats.activeQuizzes / stats.recentActivity
+              never existed on the real backend). */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 glass-card rounded-3xl p-6 border border-white/10 space-y-4">
-              <h3 className="font-display font-bold text-lg text-white">Recent Activities</h3>
-              <div className="space-y-4">
-                {stats.recentActivity.map((act: any) => (
-                  <div key={act.id} className="p-3.5 rounded-xl bg-white/5 border border-white/5 flex items-start gap-3">
-                    <div className="p-2 bg-indigo-500/10 rounded-xl text-[#c3c0ff] shrink-0">
-                      {act.type === "ai" ? <Sparkles className="w-4 h-4" /> : <ClipboardList className="w-4 h-4" />}
-                    </div>
-                    <div className="flex-1 text-xs">
-                      <p className="text-slate-200">
-                        <strong className="text-white">{act.user}</strong> {act.text}
-                      </p>
-                      <p className="text-indigo-300 font-medium mt-1">{act.topic}</p>
-                      <p className="text-slate-500 font-mono mt-1 text-[9px]">{act.time}</p>
-                    </div>
-                  </div>
-                ))}
+            <div className="lg:col-span-2 glass-card rounded-3xl p-6 border border-white/10 space-y-4 flex flex-col justify-center items-center text-center min-h-[180px]">
+              <ClipboardList className="w-10 h-10 text-slate-600" />
+              <div>
+                <h3 className="font-display font-bold text-lg text-white">Activity feed not available yet</h3>
+                <p className="text-slate-400 text-xs mt-1 max-w-sm">
+                  There's no backend endpoint yet for recent activity within your organization.
+                  Use Question Bank and Students Roster to manage things directly for now.
+                </p>
               </div>
             </div>
 
