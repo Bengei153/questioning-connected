@@ -123,19 +123,19 @@ export default function SuperAdminPortal({ currentTab }: SuperAdminPortalProps) 
   };
 
   const toggleOrgStatus = (org: Organization) => {
-    const action = org.active ? "deactivate" : "activate";
+    const action = org.isActive ? "deactivate" : "activate";
     confirm({
-      title: `${org.active ? "Deactivate" : "Activate"} Organization?`,
+      title: `${org.isActive ? "Deactivate" : "Activate"} Organization?`,
       message: `Are you sure you want to change the operating status for ${org.name}? This affects all scoped admins and students immediately.`,
-      confirmText: org.active ? "Confirm Deactivation" : "Confirm Activation",
-      type: org.active ? "danger" : "info",
+      confirmText: org.isActive ? "Confirm Deactivation" : "Confirm Activation",
+      type: org.isActive ? "danger" : "info",
       onConfirm: async () => {
         try {
           const res = await apiFetch(`/api/organizations/${org.id}/${action}`, {
             method: "PATCH"
           });
           if (res.ok) {
-            toast(`Organization ${org.name} has been ${org.active ? "deactivated" : "activated"}.`);
+            toast(`Organization ${org.name} has been ${org.isActive ? "deactivated" : "activated"}.`);
             fetchData();
           }
         } catch {
@@ -453,11 +453,11 @@ export default function SuperAdminPortal({ currentTab }: SuperAdminPortalProps) 
                   <div className="flex justify-between items-start gap-2">
                     <h3 className="font-display font-bold text-lg text-white truncate max-w-[180px]">{org.name}</h3>
                     <span className={`px-2.5 py-0.5 rounded-full font-bold font-mono text-[9px] uppercase ${
-                      org.active 
+                      org.isActive 
                         ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" 
                         : "bg-rose-500/10 text-rose-400 border border-rose-500/20"
                     }`}>
-                      {org.active ? "Active" : "Suspended"}
+                      {org.isActive ? "Active" : "Suspended"}
                     </span>
                   </div>
                   <p className="text-[10px] text-slate-500 font-mono mt-1 uppercase">ID: {org.id}</p>
@@ -468,12 +468,12 @@ export default function SuperAdminPortal({ currentTab }: SuperAdminPortalProps) 
                   <button
                     onClick={() => toggleOrgStatus(org)}
                     className={`text-xs font-semibold px-3 py-1.5 rounded-lg border transition-all ${
-                      org.active 
+                      org.isActive 
                         ? "bg-rose-500/5 hover:bg-rose-500/10 text-rose-400 border-rose-500/25" 
                         : "bg-emerald-500/5 hover:bg-emerald-500/10 text-emerald-400 border-emerald-500/25"
                     }`}
                   >
-                    {org.active ? "Deactivate" : "Activate"}
+                    {org.isActive ? "Deactivate" : "Activate"}
                   </button>
                 </div>
               </div>
@@ -655,7 +655,7 @@ export default function SuperAdminPortal({ currentTab }: SuperAdminPortalProps) 
                       className="w-full bg-[#1c263f] border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-indigo-500 transition-all outline-none text-white"
                     >
                       <option value="">-- Bind Tenant --</option>
-                      {orgs.filter(o => o.active).map(o => (
+                      {orgs.filter(o => o.isActive).map(o => (
                         <option key={o.id} value={o.id}>{o.name}</option>
                       ))}
                     </select>

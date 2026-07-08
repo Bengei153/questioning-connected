@@ -24,7 +24,7 @@ export interface AuthResponse {
 export interface Organization {
   id: string;
   name: string;
-  active: boolean;
+  isActive: boolean;
   createdAt: string;
 }
 
