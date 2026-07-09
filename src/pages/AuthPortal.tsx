@@ -55,22 +55,25 @@ export default function AuthPortal({ onOpenSettings }: AuthPortalProps) {
   }, []);
 
   const handleAutoVerify = async (userId: string, token: string) => {
-    setLoading(true);
-    try {
-      const res = await fetch(buildUrl("/api/auth/verify-email"), {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, token })
-      });
-      if (res.ok) {
-        toast("Email address verified successfully!");
-      }
-    } catch {
-      toast("Error dispatching email verification.", "error");
-    } finally {
-      setLoading(false);
+  setLoading(true);
+  try {
+    const res = await fetch(buildUrl("/api/auth/verify-email"), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId, token })
+    });
+    if (res.ok) {
+      toast("Email address verified successfully!");
+    } else {
+      const errorText = await res.text();
+      toast(`Verification failed: ${errorText}`, "error");
     }
-  };
+  } catch {
+    toast("Error dispatching email verification.", "error");
+  } finally {
+    setLoading(false);
+  }
+};
 
   // Login submission
   const handleLoginSubmit = async (e: React.FormEvent) => {
