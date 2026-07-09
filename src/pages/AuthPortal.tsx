@@ -33,6 +33,8 @@ export default function AuthPortal({ onOpenSettings }: AuthPortalProps) {
   const [loading, setLoading] = useState(false);
   const [rateLimited, setRateLimited] = useState(false);
 
+  const [verifyStatus, setVerifyStatus] = useState<"pending" | "success" | "error">("pending");
+
   // Check URL parameters on mount for verification or resets
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -63,12 +65,15 @@ export default function AuthPortal({ onOpenSettings }: AuthPortalProps) {
       body: JSON.stringify({ userId, token })
     });
     if (res.ok) {
+      setVerifyStatus("success");
       toast("Email address verified successfully!");
     } else {
       const errorText = await res.text();
+      setVerifyStatus("error");
       toast(`Verification failed: ${errorText}`, "error");
     }
   } catch {
+    setVerifyStatus("error");
     toast("Error dispatching email verification.", "error");
   } finally {
     setLoading(false);
@@ -364,26 +369,40 @@ export default function AuthPortal({ onOpenSettings }: AuthPortalProps) {
 
           {/* MODE: EMAIL VERIFY ALERT */}
           {authMode === "verify" && (
-            <div className="space-y-6 text-center">
-              <div className="mx-auto w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center">
-                <CheckCircle className="w-6 h-6" />
-              </div>
-              <div>
-                <h2 className="font-display font-bold text-xl text-white">Email Verification Processed</h2>
-                <p className="text-slate-400 text-xs mt-2 leading-relaxed">
-                  Cryptographic verification token accepted by LoginSystem API. Your account has been validated and authorized for platform sign-in.
-                </p>
-              </div>
+          <div className="space-y-6 text-center">
+            {verifyStatus === "pending" && (
+              <p className="text-slate-400 text-sm">Verifying your email…</p>
+            )}
 
-              <button
-                type="button"
-                onClick={() => setAuthMode("login")}
-                className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl text-sm transition-colors"
-              >
-                Proceed to Sign In
-              </button>
-            </div>
-          )}
+            {verifyStatus === "success" && (
+              <>
+                <div className="mx-auto w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center">
+                  <CheckCircle className="w-6 h-6" />
+                </div>
+                <h2 className="font-display font-bold text-xl text-white">Email Verified</h2>
+                <p className="text-slate-400 text-xs mt-2">Your account has been validated. You can now sign in.</p>
+              </>
+            )}
+
+            {verifyStatus === "error" && (
+              <>
+                <div className="mx-auto w-12 h-12 bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-full flex items-center justify-center">
+                  <AlertCircle className="w-6 h-6" />
+                </div>
+                <h2 className="font-display font-bold text-xl text-white">Verification Failed</h2>
+                <p className="text-slate-400 text-xs mt-2">This link may be invalid or expired. Try registering again or contact your admin.</p>
+              </>
+            )}
+
+            <button
+              type="button"
+              onClick={() => setAuthMode("login")}
+              className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl text-sm transition-colors"
+            >
+              Proceed to Sign In
+            </button>
+          </div>
+        )}
 
         </div>
 
