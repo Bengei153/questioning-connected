@@ -35,6 +35,10 @@ function MainAppCoordinator() {
   // Floating quiz list triggers for student top navbar CTA
   const [isQuizListOpen, setIsQuizListOpen] = useState(false);
 
+  useEffect(() => {
+    initializeAuth();
+  }, []);
+
   // Update default tab based on user role when user logs in
   useEffect(() => {
     if (user) {
