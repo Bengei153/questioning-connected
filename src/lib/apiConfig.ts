@@ -20,15 +20,18 @@ function stripTrailingSlash(url: string): string {
   return url.replace(/\/+$/, "");
 }
 
+const DEFAULT_LOGIN_SYSTEM_URL = "https://loginsystem-1h93.onrender.com";
+const DEFAULT_QUIZ_API_URL = "https://quizwebapp-v2.onrender.com";
+
 export function getLoginSystemUrl(): string {
   const stored = localStorage.getItem(STORAGE_KEYS.loginSystem);
-  const value = stored || import.meta.env.VITE_LOGIN_SYSTEM_URL || "";
+  const value = stored || import.meta.env.VITE_LOGIN_SYSTEM_URL || DEFAULT_LOGIN_SYSTEM_URL;
   return stripTrailingSlash(value);
 }
 
 export function getQuizApiUrl(): string {
   const stored = localStorage.getItem(STORAGE_KEYS.quizApi);
-  const value = stored || import.meta.env.VITE_QUIZ_API_URL || "";
+  const value = stored || import.meta.env.VITE_QUIZ_API_URL || DEFAULT_QUIZ_API_URL;
   return stripTrailingSlash(value);
 }
 

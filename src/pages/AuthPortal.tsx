@@ -6,10 +6,9 @@ import { useUI } from "../components/UIUtilities";
 import { getErrorMessage } from "../lib/apiError";
 
 interface AuthPortalProps {
-  onOpenSettings?: () => void;
 }
 
-export default function AuthPortal({ onOpenSettings }: AuthPortalProps) {
+export default function AuthPortal() {
   const { setAuth } = useAuthStore();
   const { toast } = useUI();
 
@@ -406,17 +405,7 @@ export default function AuthPortal({ onOpenSettings }: AuthPortalProps) {
 
         </div>
 
-        {/* Endpoint configuration - lets you fix a wrong URL without clearing storage manually */}
-        {onOpenSettings && (
-          <div className="mt-6 flex justify-center">
-            <button
-              onClick={onOpenSettings}
-              className="text-[11px] text-slate-500 hover:text-slate-300 font-mono transition-colors underline underline-offset-2"
-            >
-              Change API endpoints
-            </button>
-          </div>
-        )}
+        
 
       </div>
     </div>

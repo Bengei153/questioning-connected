@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useAuthStore, apiFetch } from "./lib/authStore";
-import { isApiConfigured } from "./lib/apiConfig";
 import { UIProvider, Skeleton } from "./components/UIUtilities";
 import SideNavBar, { StudentTopNavBar } from "./components/SideNavBar";
 import AuthPortal from "./pages/AuthPortal";
-import ApiSettings from "./pages/ApiSettings";
 import SuperAdminPortal from "./pages/SuperAdminPortal";
 import OrgAdminPortal from "./pages/OrgAdminPortal";
 import StudentPortal from "./pages/StudentPortal";
@@ -24,8 +22,6 @@ const queryClient = new QueryClient({
 
 function MainAppCoordinator() {
   const { user, initialized, initializeAuth } = useAuthStore();
-  const [apiConfigured, setApiConfigured] = useState(isApiConfigured());
-  const [showSettings, setShowSettings] = useState(false);
   const [currentTab, setCurrentTab] = useState("dashboard");
   const [aiModalOpen, setAiModalOpen] = useState(false);
   const [aiTargetGroupId, setAiTargetGroupId] = useState("");
@@ -38,11 +34,6 @@ function MainAppCoordinator() {
 
   // Floating quiz list triggers for student top navbar CTA
   const [isQuizListOpen, setIsQuizListOpen] = useState(false);
-
-  // Only start checking for a session once we actually know where to send requests.
-  useEffect(() => {
-    if (apiConfigured) initializeAuth();
-  }, [apiConfigured]);
 
   // Update default tab based on user role when user logs in
   useEffect(() => {
@@ -102,19 +93,6 @@ function MainAppCoordinator() {
     setLastImportTime(Date.now());
   };
 
-  // Not configured yet -> force the setup screen before anything else can run.
-  if (!apiConfigured || showSettings) {
-    return (
-      <ApiSettings
-        isFirstRun={!apiConfigured}
-        onSaved={() => {
-          setApiConfigured(true);
-          setShowSettings(false);
-        }}
-      />
-    );
-  }
-
   // Wait for initial session loading token check
   if (!initialized) {
     return (
@@ -128,7 +106,7 @@ function MainAppCoordinator() {
 
   // Not signed in -> Auth Screen
   if (!user) {
-    return <AuthPortal onOpenSettings={() => setShowSettings(true)} />;
+    return <AuthPortal />;
   }
 
   return (

@@ -264,7 +264,7 @@ export default function StudentPortal({
                 <span>Suggested Learning Paths</span>
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {stats.suggestedTopics.map((topic: any) => (
+                {(stats.suggestedTopics ?? []).map((topic: any) => (
                   <div key={topic.id} className="bg-white/5 border border-white/5 rounded-2xl p-4 flex flex-col justify-between hover:border-white/15 transition-all">
                     <div>
                       <span className={`inline-block px-2.5 py-0.5 rounded font-mono font-black text-[9px] mb-3 ${
