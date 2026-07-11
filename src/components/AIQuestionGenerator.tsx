@@ -184,7 +184,7 @@ export default function AIQuestionGenerator({
                 <textarea
                   value={rawText}
                   onChange={(e) => setRawText(e.target.value)}
-                  placeholder="Paste your syllabus content, raw PDF text, textbook screenshots converted to text, flashcards, or exam guides here. Our server-side Gemini 3.5 engine will read, outline core structures, format answers, and import into your folder in a single pass..."
+                  placeholder="Paste your syllabus content, raw PDF text, textbook screenshots converted to text, flashcards, or exam guides here. Our server-side Anthropic engine will read, outline core structures, format answers, and import into your folder in a single pass..."
                   rows={8}
                   required
                   className="w-full bg-[#0b1326] border border-white/10 rounded-2xl p-4 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all outline-none font-sans text-slate-200 placeholder-slate-500 resize-y leading-relaxed"
@@ -221,7 +221,7 @@ export default function AIQuestionGenerator({
 
               <h3 className="font-display font-semibold text-lg text-white">AI is reading your content...</h3>
               <p className="text-sm text-slate-400 max-w-sm mt-2 leading-relaxed">
-                Gemini is mapping standard competencies, authoring distractor choices, and structuring questions database. This takes roughly 3-5 seconds.
+                Anthropic is mapping standard competencies, authoring distractor choices, and structuring questions database. This takes roughly 3-5 seconds.
               </p>
 
               <div className="w-48 bg-slate-800 h-1.5 rounded-full overflow-hidden mt-6">

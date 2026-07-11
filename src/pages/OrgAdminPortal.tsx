@@ -75,7 +75,7 @@ export default function OrgAdminPortal({
 
   const [showQuestionModal, setShowQuestionModal] = useState(false);
   const [qText, setQText] = useState("");
-  const [qType, setQType] = useState<"Multiple Choice" | "Multi-Select">("Multiple Choice");
+  const [qType, setQType] = useState<"SingleChoice" | "MultipleChoice">("SingleChoice");
   const [qPoints, setQPoints] = useState(10);
   const [editingQId, setEditingQId] = useState<string | null>(null);
 
@@ -371,7 +371,7 @@ export default function OrgAdminPortal({
         toast(editingQId ? "Question modified" : "Question added manually");
         setShowQuestionModal(false);
         setQText("");
-        setQType("Multiple Choice");
+        setQType("SingleChoice");
         setQPoints(10);
         setEditingQId(null);
         fetchQuestions(activeFolder.id);
@@ -1091,7 +1091,7 @@ export default function OrgAdminPortal({
                 onClick={() => {
                   setEditingQId(null);
                   setQText("");
-                  setQType("Multiple Choice");
+                  setQType("SingleChoice");
                   setQPoints(10);
                   setShowQuestionModal(true);
                 }}
@@ -1308,8 +1308,8 @@ export default function OrgAdminPortal({
                         onChange={e => setQType(e.target.value as any)}
                         className="w-full bg-[#1c263f] border border-white/10 rounded-xl px-4 py-3 text-sm outline-none text-white focus:border-indigo-500 transition-colors"
                       >
-                        <option value="Multiple Choice">Multiple Choice</option>
-                        <option value="Multi-Select">Multi-Select</option>
+                        <option value="SingleChoice">Multiple Choice</option>
+                        <option value="MultipleChoice">Multi-Select</option>
                       </select>
                     </div>
                     <div>

@@ -56,7 +56,7 @@ export interface Question {
   id: string;
   folderId: string;
   text: string;
-  type: "Multiple Choice" | "Multi-Select";
+  type: "SingleChoice" | "MultipleChoice";
   points: number;
   image: string | null;
   createdAt: string;
