@@ -364,7 +364,7 @@ export default function OrgAdminPortal({
 
       const res = await apiFetch(url, {
         method,
-        body: JSON.stringify({ text: qText, type: qType, points: qPoints })
+        body: JSON.stringify({ text: qText, type: qType, points: qPoints, groupId: activeFolder.groupId })
       });
 
       if (res.ok) {
