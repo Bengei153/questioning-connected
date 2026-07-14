@@ -90,7 +90,7 @@ export default function StudentPortal({
     setIsQuizListOpen(false);
     setLoading(true);
     try {
-      const res = await apiFetch(`/api/quizzes/${folder.id}/start`, { method: "POST" });
+      const res = await apiFetch(`/api/quizzes/${folder.id}/start?groupId=${folder.groupId}`, { method: "POST" });
       if (res.ok) {
         const data = await res.json();
         setActiveQuiz(data);
