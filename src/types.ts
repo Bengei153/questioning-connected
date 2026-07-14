@@ -80,3 +80,11 @@ export interface SystemLog {
   severity: "info" | "warning" | "error";
   timestamp: string;
 }
+
+export interface StudentFolder {
+  id: string;
+  name: string;
+  groupId: string;
+  groupName: string;
+  questionCount: number;
+}

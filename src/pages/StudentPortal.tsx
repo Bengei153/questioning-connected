@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import { useUI } from "../components/UIUtilities";
 import { apiFetch } from "../lib/authStore";
-import { QuestionGroup, QuizAttempt, Question } from "../types";
+import { QuestionGroup, QuizAttempt, Question, StudentFolder } from "../types";
 
 interface StudentPortalProps {
   currentTab: string;
@@ -39,7 +39,7 @@ export default function StudentPortal({
   // Core States
   const [stats, setStats] = useState<any>(null);
   const [history, setHistory] = useState<QuizAttempt[]>([]);
-  const [availableQuizzes, setAvailableQuizzes] = useState<QuestionGroup[]>([]);
+ const [availableQuizzes, setAvailableQuizzes] = useState<StudentFolder[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Profile Edit fields - PATCH /api/users/me only accepts phoneNumber.
@@ -67,7 +67,7 @@ export default function StudentPortal({
       const [statsRes, historyRes, quizzesRes, meRes] = await Promise.all([
         apiFetch("/api/student/stats"),
         apiFetch("/api/student/history"),
-        apiFetch("/api/student/question-groups"),
+        apiFetch("/api/student/folders"),
         apiFetch("/api/users/me")
       ]);
 
@@ -86,11 +86,11 @@ export default function StudentPortal({
   };
 
   // QUIZ TRANSITION INITIATION
-  const startQuizAttempt = async (group: QuestionGroup) => {
+  const startQuizAttempt = async (folder: StudentFolder) => {
     setIsQuizListOpen(false);
     setLoading(true);
     try {
-      const res = await apiFetch(`/api/quizzes/${group.id}/start`, { method: "POST" });
+      const res = await apiFetch(`/api/quizzes/${folder.id}/start`, { method: "POST" });
       if (res.ok) {
         const data = await res.json();
         setActiveQuiz(data);
@@ -98,7 +98,7 @@ export default function StudentPortal({
         setQuizTimer(0);
         setQuizResults(null);
         setCurrentTab("quiz-runner");
-        toast(`Initiated ${group.name}. Good luck!`);
+        toast(`Initiated ${folder.name}. Good luck!`);
       } else {
         const err = await res.json();
         toast(err.message || "Failed to start quiz session.", "error");
@@ -292,7 +292,7 @@ export default function StudentPortal({
                     <div key={quiz.id} className="p-3 bg-white/5 border border-white/5 rounded-xl flex items-center justify-between gap-3 hover:border-white/15 transition-colors">
                       <div className="min-w-0">
                         <p className="text-xs font-semibold text-white truncate">{quiz.name}</p>
-                        <p className="text-[10px] text-slate-500 truncate font-mono">STATUS: {quiz.status}</p>
+                        <p className="text-[10px] text-slate-500 truncate font-mono">{quiz.groupName}</p>
                       </div>
                       <button
                         onClick={() => startQuizAttempt(quiz)}
@@ -643,7 +643,7 @@ export default function StudentPortal({
                 >
                   <div className="min-w-0">
                     <h4 className="text-sm font-semibold text-white truncate">{quiz.name}</h4>
-                    <p className="text-xs text-slate-400 truncate mt-1 leading-relaxed font-sans">{quiz.description}</p>
+                    <p className="text-[10px] text-slate-500 truncate font-mono">{quiz.groupName}</p>
                   </div>
                   <ChevronRight className="w-5 h-5 text-indigo-400 shrink-0" />
                 </div>
