@@ -627,50 +627,64 @@ export default function StudentPortal({
 
       {/* MODAL: FLOATING QUIZ LIST LAUNCH SELECTOR */}
       {isQuizListOpen && (
-        <div className="p-6 space-y-3.5 max-h-[350px] overflow-y-auto">
-          {activeGroupFilter === null ? (
-            <>
-              {availableGroups.map(group => (
-                <div
-                  key={group.groupId}
-                  onClick={() => setActiveGroupFilter(group.groupId)}
-                  className="p-4 bg-white/5 border border-white/5 rounded-2xl flex justify-between items-center gap-4 cursor-pointer hover:bg-white/10 hover:border-white/15 transition-all"
-                >
-                  <h4 className="text-sm font-semibold text-white truncate">{group.groupName}</h4>
-                  <ChevronRight className="w-5 h-5 text-indigo-400 shrink-0" />
-                </div>
-              ))}
-              {availableGroups.length === 0 && (
-                <p className="text-xs text-slate-500 text-center">No live examinations are registered at this moment.</p>
-              )}
-            </>
-          ) : (
-            <>
-              <button
-                onClick={() => setActiveGroupFilter(null)}
-                className="text-xs text-indigo-400 hover:text-indigo-300 mb-2"
-              >
-                ← Back to groups
-              </button>
-              {availableQuizzes
-                .filter(f => f.groupId === activeGroupFilter)
-                .map(quiz => (
+      <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
+        <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-md" onClick={() => { setIsQuizListOpen(false); setActiveGroupFilter(null); }} />
+        <div className="relative w-full max-w-md bg-[#131b2e] border border-white/15 rounded-3xl overflow-hidden shadow-2xl z-10 text-white">
+          <div className="p-6 border-b border-white/10 flex justify-between items-center">
+            <div>
+              <h3 className="font-display font-bold text-lg text-white">Select Quiz Project</h3>
+              <p className="text-slate-400 text-xs mt-1">Authorized examinations in your tenant scope.</p>
+            </div>
+            <button onClick={() => { setIsQuizListOpen(false); setActiveGroupFilter(null); }} className="p-1 rounded-full bg-white/5 hover:bg-white/10 text-slate-300">
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+          <div className="p-6 space-y-3.5 max-h-[350px] overflow-y-auto">
+            {activeGroupFilter === null ? (
+              <>
+                {availableGroups.map(group => (
                   <div
-                    key={quiz.id}
-                    onClick={() => startQuizAttempt(quiz)}
+                    key={group.groupId}
+                    onClick={() => setActiveGroupFilter(group.groupId)}
                     className="p-4 bg-white/5 border border-white/5 rounded-2xl flex justify-between items-center gap-4 cursor-pointer hover:bg-white/10 hover:border-white/15 transition-all"
                   >
-                    <div className="min-w-0">
-                      <h4 className="text-sm font-semibold text-white truncate">{quiz.name}</h4>
-                      <p className="text-xs text-slate-400 truncate mt-1 leading-relaxed font-sans">{quiz.questionCount} questions</p>
-                    </div>
+                    <h4 className="text-sm font-semibold text-white truncate">{group.groupName}</h4>
                     <ChevronRight className="w-5 h-5 text-indigo-400 shrink-0" />
                   </div>
                 ))}
-            </>
-          )}
+                {availableGroups.length === 0 && (
+                  <p className="text-xs text-slate-500 text-center">No live examinations are registered at this moment.</p>
+                )}
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => setActiveGroupFilter(null)}
+                  className="text-xs text-indigo-400 hover:text-indigo-300 mb-2"
+                >
+                  ← Back to groups
+                </button>
+                {availableQuizzes
+                  .filter(f => f.groupId === activeGroupFilter)
+                  .map(quiz => (
+                    <div
+                      key={quiz.id}
+                      onClick={() => startQuizAttempt(quiz)}
+                      className="p-4 bg-white/5 border border-white/5 rounded-2xl flex justify-between items-center gap-4 cursor-pointer hover:bg-white/10 hover:border-white/15 transition-all"
+                    >
+                      <div className="min-w-0">
+                        <h4 className="text-sm font-semibold text-white truncate">{quiz.name}</h4>
+                        <p className="text-xs text-slate-400 truncate mt-1 leading-relaxed font-sans">{quiz.questionCount} questions</p>
+                      </div>
+                      <ChevronRight className="w-5 h-5 text-indigo-400 shrink-0" />
+                    </div>
+                  ))}
+              </>
+            )}
+          </div>
         </div>
-      )}
+      </div>
+    )}
 
     </div>
   );
