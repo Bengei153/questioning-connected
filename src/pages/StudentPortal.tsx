@@ -162,6 +162,7 @@ export default function StudentPortal({
 
       if (res.ok) {
         const data = await res.json();
+        console.log("SUBMIT QUIZ RESPONSE:", JSON.stringify(data, null, 2));
         setQuizResults(data);
         setCurrentTab("quiz-results");
         toast(`Assessment completed! Score: ${data.score}%`);
