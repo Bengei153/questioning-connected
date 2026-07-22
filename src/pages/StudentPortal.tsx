@@ -98,7 +98,7 @@ export default function StudentPortal({
       const res = await apiFetch(`/api/quizzes/${folder.id}/start?groupId=${folder.groupId}`, { method: "POST" });
       if (res.ok) {
         const data = await res.json();
-        console.log("START QUIZ RESPONSE:", JSON.stringify(data, null, 2));
+        //console.log("START QUIZ RESPONSE:", JSON.stringify(data, null, 2));
         setActiveQuiz(data);
         setSelectedAnswers({});
         setQuizTimer(0);
@@ -162,7 +162,7 @@ export default function StudentPortal({
 
       if (res.ok) {
         const data = await res.json();
-        console.log("SUBMIT QUIZ RESPONSE:", JSON.stringify(data, null, 2));
+        //console.log("SUBMIT QUIZ RESPONSE:", JSON.stringify(data, null, 2));
         setQuizResults(data);
         setCurrentTab("quiz-results");
         toast(`Assessment completed! Score: ${data.score}%`);
